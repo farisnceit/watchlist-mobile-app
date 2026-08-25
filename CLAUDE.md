@@ -10,7 +10,7 @@ Expo SDK 57 is very recent — its APIs differ from older SDKs you may know. Bef
 
 - `npm start` — start the Expo dev server (Metro)
 - `npm run android` / `npm run ios` / `npm run web` — start the dev server targeting a specific platform
-- `npm run lint` — runs `expo lint` (flat config in `eslint.config.js`, `eslint-config-expo` + `eslint-config-prettier`)
+- `npm run lint` — runs `expo lint` (flat config in `eslint.config.js`, `eslint-config-expo` + `eslint-config-prettier`). Currently reports one known, intentionally-unfixed warning in `src/hooks/use-color-scheme.web.ts` (`react-hooks/set-state-in-effect`) — it's a deliberate hydration-safe pattern for static web rendering, not a bug; don't "fix" it without being asked.
 - `npm run format` / `npm run format:check` — Prettier write / check (`.prettierrc.json`: `singleQuote: true`, otherwise defaults)
 - `npm run reset-project` — stock create-expo-app script that moves the current `src/app` scaffold to `app-example/` and creates a blank `src/app`. Only relevant if intentionally discarding the starter template.
 - There is no test script and no test runner installed (no Jest, no `__tests__`). Set this up before assuming any test command exists.

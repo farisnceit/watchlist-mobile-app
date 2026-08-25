@@ -92,3 +92,7 @@ Ran the scaffold, understood tab routing and the theme system. Confused for a bi
 ### 2026-08-25 — Phase 0 done
 
 Ran the app on an Android device via `npm start` + Expo Go. Walked through `_layout.tsx`/`app-tabs.tsx` (file-based routing, tab wiring), `index.tsx`/`explore.tsx` (screen structure, `ThemedView`/`ThemedText`, flexbox-only layout, `Platform.OS` checks, `SafeAreaView`), `theme.ts`/`use-theme.ts` (design tokens, `useTheme()` hook), and the `@/*` path alias + `.tsx`/`.web.tsx` platform-split pattern (via `use-color-scheme.ts`/`.web.ts`). Made a live text edit in `index.tsx` and confirmed Fast Refresh works on-device.
+
+### 2026-08-25 — ESLint + Prettier set up (Phase 7, partial)
+
+Bootstrapped `eslint-config-expo` via `npx expo lint`, added `prettier` + `eslint-config-prettier` so the two don't fight over formatting, reformatted the whole tree for a consistent baseline. `npm run lint` surfaces one pre-existing warning in `use-color-scheme.web.ts` (`react-hooks/set-state-in-effect`) — it's an intentional hydration-safe pattern, not a bug, so decided to leave it rather than fix now.
