@@ -30,7 +30,7 @@ Goal: talk to the same Supabase project the web app uses, prove a read works.
 - [ ] Get the Supabase URL + anon key from the web app's `web/.env.local` (or Supabase dashboard) and add them to this project as `EXPO_PUBLIC_SUPABASE_URL` / `EXPO_PUBLIC_SUPABASE_ANON_KEY` (Expo's public-env prefix, equivalent to Vite's `VITE_` prefix)
 - [ ] Create a Supabase client module (mirrors `web/src/lib/supabaseClient.ts`)
 - [ ] Write a throwaway test: fetch all rows from `titles` and `console.log` them — confirm the connection works end to end
-- [ ] Understand *why* there's no Supabase Auth session here (the web app's access-code + RLS model) before building anything that writes
+- [ ] Understand _why_ there's no Supabase Auth session here (the web app's access-code + RLS model) before building anything that writes
 
 ## Phase 2 — Display the watchlist (read-only)
 
@@ -74,7 +74,7 @@ Goal: the full add-new-title flow, including the server-proxied search.
 
 ## Phase 7 — Polish & tooling
 
-- [ ] Set up ESLint (`npm run lint` currently unconfigured — see `CLAUDE.md`)
+- [x] Set up ESLint + Prettier (`npm run lint`, `npm run format`)
 - [ ] App icon / splash review for the mobile-specific branding
 - [ ] Decide if/what needs a test setup (none exists yet)
 
@@ -90,4 +90,5 @@ Ran the scaffold, understood tab routing and the theme system. Confused for a bi
 -->
 
 ### 2026-08-25 — Phase 0 done
+
 Ran the app on an Android device via `npm start` + Expo Go. Walked through `_layout.tsx`/`app-tabs.tsx` (file-based routing, tab wiring), `index.tsx`/`explore.tsx` (screen structure, `ThemedView`/`ThemedText`, flexbox-only layout, `Platform.OS` checks, `SafeAreaView`), `theme.ts`/`use-theme.ts` (design tokens, `useTheme()` hook), and the `@/*` path alias + `.tsx`/`.web.tsx` platform-split pattern (via `use-color-scheme.ts`/`.web.ts`). Made a live text edit in `index.tsx` and confirmed Fast Refresh works on-device.

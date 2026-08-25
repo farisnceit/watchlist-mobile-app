@@ -10,7 +10,8 @@ Expo SDK 57 is very recent — its APIs differ from older SDKs you may know. Bef
 
 - `npm start` — start the Expo dev server (Metro)
 - `npm run android` / `npm run ios` / `npm run web` — start the dev server targeting a specific platform
-- `npm run lint` — runs `expo lint`; **not yet initialized** (no ESLint/Prettier config or packages installed). First run will trigger Expo's interactive setup rather than actually lint.
+- `npm run lint` — runs `expo lint` (flat config in `eslint.config.js`, `eslint-config-expo` + `eslint-config-prettier`)
+- `npm run format` / `npm run format:check` — Prettier write / check (`.prettierrc.json`: `singleQuote: true`, otherwise defaults)
 - `npm run reset-project` — stock create-expo-app script that moves the current `src/app` scaffold to `app-example/` and creates a blank `src/app`. Only relevant if intentionally discarding the starter template.
 - There is no test script and no test runner installed (no Jest, no `__tests__`). Set this up before assuming any test command exists.
 
@@ -32,6 +33,7 @@ This app is a React Native/Expo port of an existing web watchlist app that lives
 **Auth model — no login.** There's no Supabase Auth session. Reads are open via RLS (`for select using (true)`). Writes are gated by a shared "access code": the client sends it as an `x-app-secret` header, and a Postgres `SECURITY DEFINER` function `public.check_write_secret()` compares it against a secret in `private.app_config`; RLS insert/update/delete policies call that function. The anon key is intentionally public — RLS is the real gate. On the web app the code is cached in `localStorage`; on this app it should use `expo-secure-store` instead.
 
 **Schema** (Postgres, applied manually via `supabase/schema.sql` in the web repo — no migrations folder):
+
 - `public.titles` — the core table, one row per movie or show. Key columns: `id uuid`, `media_type` (`'movie'|'show'`), `tmdb_id`, `tvdb_id`, `name`, `poster_url`, `year`, `genres text[]`, `overview`, `runtime_minutes` (movies), `imdb_id` (movies), `show_status`/`watched_episode_count`/`aired_episode_count` (shows), `status` (`'watched'|'watch_later'|'following'|'dropped'`), `is_favourite bool`, `watched_at`, `last_watched_at`, `added_at`, `release_date` (movies, for Upcoming), `next_episode_air_date`/`next_episode_season`/`next_episode_number` (shows, for Upcoming). Unique on `(media_type, tmdb_id)` where `tmdb_id is not null`.
 - `public.title_seasons` / `public.title_episodes` — per-episode watch tracking, FK `title_id → titles.id on delete cascade`. `title_episodes` has a `watched bool` + `watched_at`.
 - `public.tmdb_upcoming_movies` — cache table for the Upcoming view, read-only to clients (no insert/update/delete policy for `anon`/`authenticated` at all — only a service-role Edge Function writes it, via daily `pg_cron`).
@@ -41,6 +43,7 @@ This app is a React Native/Expo port of an existing web watchlist app that lives
 **TMDB integration**: never called directly from any client. Proxied through a Supabase Edge Function (`tmdb-proxy`, in the web repo's `supabase/functions/`) which itself checks the `x-app-secret` header (against secret `APP_WRITE_SECRET`) and holds the real `TMDB_API_KEY` server-side. Supported actions: `search`, `details`, `season_episodes`, `swipe_feed`, `discover`. Call it the same way from this app: `supabase.functions.invoke('tmdb-proxy', { body: { action, ... } })` — no new backend code needed for feature parity.
 
 **Patterns to mirror from the web app** (`web/src/` in the web repo), adapted for RN:
+
 - `lib/supabaseClient.ts` — builds the Supabase client with the `x-app-secret` header baked in from the cached access code; exposes `getSupabase()` / `refreshSupabaseClient()`.
 - `lib/withAccessCode.ts` — wraps every write call; on an RLS/401 rejection (Postgres code `42501`), clears the cached code, rebuilds the client, re-prompts for the code, retries once.
 - TanStack Query hooks per concern: `useTitles`, `useMutateTitle`, `useAddTitle`, `useTmdbSearch`, `useEpisodes`, `useToggleEpisode`, `useUpcoming`, `useSwipeCandidates`/`useSwipeActions`, `useAdvanceSearch`. Reads never go through `withAccessCode` (they're open); only writes do.
