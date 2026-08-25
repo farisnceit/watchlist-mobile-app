@@ -16,11 +16,11 @@ Porting the existing web watchlist app (`F:\farudesigns\Watchlist\watchlist-app`
 Goal: get comfortable navigating and running the existing scaffold before adding anything.
 
 - [x] Run `npm start` and open the app in Expo Go (or a simulator) — confirm it launches
-- [ ] Read `src/app/_layout.tsx` and `src/components/app-tabs.tsx` — understand how the two tabs (Home/Explore) are wired via `expo-router`'s file-based routing
-- [ ] Read `src/app/index.tsx` and `src/app/explore.tsx` — see how a screen component is structured
-- [ ] Make a trivial edit (change some text) in `index.tsx`, save, see it hot-reload on device
-- [ ] Skim `src/constants/theme.ts` and `src/hooks/use-theme.ts` — understand the light/dark token system
-- [ ] Understand the `@/*` path alias (`tsconfig.json`) and the `.tsx` vs `.web.tsx` platform-split file pattern
+- [x] Read `src/app/_layout.tsx` and `src/components/app-tabs.tsx` — understand how the two tabs (Home/Explore) are wired via `expo-router`'s file-based routing
+- [x] Read `src/app/index.tsx` and `src/app/explore.tsx` — see how a screen component is structured
+- [x] Make a trivial edit (change some text) in `index.tsx`, save, see it hot-reload on device
+- [x] Skim `src/constants/theme.ts` and `src/hooks/use-theme.ts` — understand the light/dark token system
+- [x] Understand the `@/*` path alias (`tsconfig.json`) and the `.tsx` vs `.web.tsx` platform-split file pattern
 
 ## Phase 1 — Supabase connection
 
@@ -88,3 +88,6 @@ _Add an entry each time a phase (or a meaningful chunk of one) is completed — 
 ### 2026-08-24 — Phase 0 done
 Ran the scaffold, understood tab routing and the theme system. Confused for a bit about why `explore.tsx` maps to a route automatically — got it once I understood expo-router's file-based convention.
 -->
+
+### 2026-08-25 — Phase 0 done
+Ran the app on an Android device via `npm start` + Expo Go. Walked through `_layout.tsx`/`app-tabs.tsx` (file-based routing, tab wiring), `index.tsx`/`explore.tsx` (screen structure, `ThemedView`/`ThemedText`, flexbox-only layout, `Platform.OS` checks, `SafeAreaView`), `theme.ts`/`use-theme.ts` (design tokens, `useTheme()` hook), and the `@/*` path alias + `.tsx`/`.web.tsx` platform-split pattern (via `use-color-scheme.ts`/`.web.ts`). Made a live text edit in `index.tsx` and confirmed Fast Refresh works on-device.
